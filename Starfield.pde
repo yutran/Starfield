@@ -1,84 +1,65 @@
-Particle[] stars = new Particle[500];
-void setup()
-{
-  size(500, 500);
+Particle[] star = new Particle[500];
+int dots = 0;
 
-  for (int i = 0; i < stars.length; i++)
-    stars[i] = new TopParticle();
-  for (int i = 0; i < 3; i++) {
-    stars[i] = new MiddleParticle(i);
-  }
-  for (int i = 3; i < 10; i++) {
-    stars[i] = new BottomParticle();
-    }
-}
-void draw()
-{
-  fill(0,50);
-  rect(0, 0 ,500, 500);
-  for (int i = 0; i < stars.length; i++) {
-    stars[i].move(i);
-    stars[i].show();
+void setup(){
+ size(1000,1000);
+   for(int i = 0; i <= star.length-1; i++){
+    star[i] = new Particle();
+    star[0] = new OddballParticle();
   }
 }
-class TopParticle implements Particle
-{
-  double angle;
-  float speed, xPos, yPos;
-  TopParticle() {
-    xPos = 250;
-    yPos = 250;
-    angle = Math.random()*2*PI;
-    speed = (float)Math.random()*2;
-  }
-  public void move(int a) {
-    if ((xPos < 0 || xPos > 600) || (yPos < 0 || yPos > 600)) {
-      angle = Math.random()*2*PI;
-      speed = (float)Math.random();
-    }
-    xPos = xPos+speed*(cos((float)angle));
-    yPos = yPos+speed*(sin((float)angle));
-  }
-  public void show() {
-    noStroke();
-    fill(255);
-    ellipse(xPos, yPos, 5, 5);
+
+void draw(){
+  background(0);
+  for(int i = 0; i <= star.length-1; i++){
+  star[i].show();
+  star[i].move();
   }
 }
-class MiddleParticle implements Particle
-{
-  float size, xPos, yPos;
-  MiddleParticle(int x) {
-    size = 0;
-    xPos = 200;
-    yPos = 200;
+
+class Particle{
+  int myColor;
+  double myX, myY, myZ, mySpeed;
+  Particle(){
+    if (dots%2 == 0)
+      myColor = color((int)(Math.random()*200));
+    else
+      if ((int)(Math.random()*5) == 1)
+        myColor = color(255);
+      else
+    myX = 250;
+    myY = 250;
+    myZ = Math.random()*(2*Math.PI);
+    mySpeed = Math.random()*15;
   }
-  public void move(int x) {
-    if ((xPos<0 || xPos>600) || (yPos<0 || yPos>600)) {
-    }
-    if (x==0) {
-      xPos = xPos+1; yPos = yPos+1;
-    }
-    if (x==1) {
-      xPos = xPos+1; yPos = yPos-1;
-    }
-    if (x==2) {
-      xPos = xPos-1; yPos = yPos+1;
-    }
+  void move(){
+    myX = (myX + (Math.cos(myZ)*mySpeed));
+    myY = (myY + (Math.sin(myZ)*mySpeed));
   }
-  public void show() {
-    size++;
-    ellipse(xPos,yPos,size,size);
+  void show(){
+    fill(myColor);
+    stroke(myColor);
+    ellipse((float)myX,(float)myY,10,10);
   }
 }
-class BottomParticle extends TopParticle
- {
- public void show() {
-   ellipse(xPos,yPos,20,20);   
- }
- }
-interface Particle
-{
-  public void move(int x);
-  public void show();
+class OddballParticle extends Particle{
+    OddballParticle(){
+      if (dots%2 == 0)
+        myColor = color(255);
+      else
+      myX = 50;
+      myY = 50;
+      myZ = Math.random();
+      mySpeed = Math.random()*20;
+    }
+    void move(){
+      myX = (myX + (Math.cos(myZ)*mySpeed));
+      myY = (myY + (Math.sin(myZ)*mySpeed));
+    }
+    void show(){
+      fill(myColor);
+      stroke(myColor);
+      ellipse((float)myX,(float)myY,100,100);
+      ellipse((float)myY,(float)myX,100,100);
+    }
 }
